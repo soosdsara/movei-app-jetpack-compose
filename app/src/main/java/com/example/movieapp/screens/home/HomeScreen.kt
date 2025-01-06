@@ -1,5 +1,6 @@
 package com.example.movieapp.screens.home
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,10 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.movieapp.model.Movie
+import com.example.movieapp.model.getMoviesFromJson
 import com.example.movieapp.navigation.MovieScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +46,7 @@ fun HomeScreen(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        "Title",
+                        "MovieApp",
                         color = MaterialTheme.colorScheme.background,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.ExtraBold,
@@ -62,42 +66,34 @@ fun MainContent(
     modifier: Modifier = Modifier,
     navController: NavController,
     paddingValues: PaddingValues,
-    movieList: List<String> = listOf(
-        "Harry Potter",
-        "Lord of the Rings",
-        "Star Wars",
-        "The Matrix",
-        "The Dark Knight",
-        "Fight Club",
-        "Inception",
-        "Pulp Fiction",
-        "The Godfather",
-        "The Dark Knight Rises",
-        "The Lord of the Rings: The Return of the King",
-        "Avatar",
-        "Titanic"
-    )
+    movieList: List<Movie> = getMovies(LocalContext.current)
 ) {
+
     Column(modifier = modifier.padding(paddingValues)) {
         LazyColumn {
             items(movieList) {
                 MovieRow(movie = it, onItemClick = { movie ->
-                    navController.navigate(route = MovieScreens.DetailsScreen.name+"/$movie")
+                    navController.navigate(route = MovieScreens.DetailsScreen.name + "/$movie")
                 })
             }
         }
+
     }
 }
 
+fun getMovies(context: Context): List<Movie> {
+    return getMoviesFromJson(context)
+}
+
 @Composable
-fun MovieRow(movie: String, onItemClick: (String) -> Unit) {
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth()
             .height(130.dp)
             .clickable {
-                onItemClick(movie)
+                onItemClick(movie.id)
             },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -115,7 +111,7 @@ fun MovieRow(movie: String, onItemClick: (String) -> Unit) {
             ) {
                 Icon(imageVector = Icons.Default.AccountBox, contentDescription = "Movie Icon")
             }
-            Text(movie, fontWeight = FontWeight.Bold)
+            Text(movie.title, fontWeight = FontWeight.Bold)
         }
     }
 }
