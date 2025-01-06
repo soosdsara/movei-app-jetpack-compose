@@ -23,6 +23,7 @@ data class Movie(
     @SerializedName("Country") val country: String,
     @SerializedName("Poster") val poster: String,
     @SerializedName("Images") val images: List<String>,
+    val imdbRating: String
 )
 
 fun getMoviesFromJson(context: Context): List<Movie> {
