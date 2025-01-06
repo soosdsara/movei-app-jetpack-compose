@@ -1,6 +1,7 @@
 package com.example.movieapp.model
 
 import android.content.Context
+import android.util.Log
 import java.io.IOException
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -26,12 +27,14 @@ data class Movie(
     val imdbRating: String
 )
 
-fun getMoviesFromJson(context: Context): List<Movie> {
+private var cachedMovies: List<Movie>? = null
+
+private fun parseMoviesFromJSON(context: Context): List<Movie> {
     val json: String
     try {
         json = context.assets.open("Film.json").bufferedReader().use { it.readText() }
     } catch (ioException: IOException) {
-        ioException.printStackTrace()
+        Log.e("parseMoviesFromJSON", "Failed to load JSON file", ioException)
         return emptyList()
     }
 
@@ -43,4 +46,12 @@ fun getMoviesFromJson(context: Context): List<Movie> {
         movie.apply { id = UUID.randomUUID().toString() }
     }
 }
+
+fun getMovies(context: Context): List<Movie> {
+    if (cachedMovies == null) {
+        cachedMovies = parseMoviesFromJSON(context)
+    }
+    return cachedMovies ?: emptyList()
+}
+
 
