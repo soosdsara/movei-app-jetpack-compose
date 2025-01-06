@@ -24,7 +24,8 @@ data class Movie(
     @SerializedName("Country") val country: String,
     @SerializedName("Poster") val poster: String,
     @SerializedName("Images") val images: List<String>,
-    val imdbRating: String
+    val imdbRating: String,
+    val imdbLink: String
 )
 
 private var cachedMovies: List<Movie>? = null

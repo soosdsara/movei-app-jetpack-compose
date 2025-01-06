@@ -26,7 +26,7 @@ import com.example.movieapp.widgets.MovieRow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    Scaffold(
+    Scaffold(containerColor = Color(0xFF3D3D40),
         topBar = {
             TopAppBar(
                 title = {
@@ -38,7 +38,7 @@ fun HomeScreen(navController: NavController) {
                         fontFamily = FontFamily.SansSerif,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(Color(0xD2222F87))
+                colors = TopAppBarDefaults.topAppBarColors(Color(0xFF232323))
             )
         })
     {

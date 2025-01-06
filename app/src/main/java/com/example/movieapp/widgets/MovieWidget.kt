@@ -43,7 +43,6 @@ fun MovieRow(
     movie: Movie,
     onItemClick: (String) -> Unit? = {}
 ) {
-    var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -75,64 +74,75 @@ fun MovieRow(
                     contentScale = ContentScale.Crop
                 )
             }
-            Column {
-                Text(
-                    text = movie.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Director: ${movie.director}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = "Released: ${movie.released}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-                AnimatedVisibility(visible = expanded) {
-                    Column {
-                        Text(buildAnnotatedString {
-                            withStyle(
-                                style = SpanStyle(
-                                    color = Color.DarkGray,
-                                    fontSize = MaterialTheme.typography.bodySmall.fontSize
-                                )
-                            ) { append("Plot: ") }
-                            withStyle(
-                                style = SpanStyle(
-                                    color = Color.DarkGray,
-                                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                                    fontWeight = FontWeight.Light
-                                )
-                            ) { append(movie.plot) }
-                        }, modifier = Modifier.padding(6.dp))
-                        HorizontalDivider(Modifier.padding(5.dp))
-                        Text(
-                            text = "Director: ${movie.director}",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            text = "Actors: ${movie.actors}",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            text = "Rating: ${movie.imdbRating}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-                Icon(
-                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Down Arrow",
-                    modifier = Modifier
-                        .size(25.dp)
-                        .clickable {
-                            expanded = !expanded
-                        }
-                )
-            }
+            MovieDetails(movie)
         }
 
+    }
+}
+
+@Composable
+fun MovieDetails(movie: Movie) {
+    var expanded by remember { mutableStateOf(false) }
+    Column {
+        Text(
+            text = movie.title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "Director: ${movie.director}",
+            style = MaterialTheme.typography.bodySmall
+        )
+        Text(
+            text = "Released: ${movie.released}",
+            style = MaterialTheme.typography.bodySmall
+        )
+        AnimatedDetails(movie, expanded)
+        Icon(
+            imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+            contentDescription = "Down Arrow",
+            modifier = Modifier
+                .size(25.dp)
+                .clickable {
+                    expanded = !expanded
+                }
+        )
+    }
+}
+
+@Composable
+fun AnimatedDetails(movie: Movie, expanded: Boolean) {
+    AnimatedVisibility(visible = expanded) {
+        Column {
+            Text(buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.DarkGray,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize
+                    )
+                ) { append("Plot: ") }
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.DarkGray,
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        fontWeight = FontWeight.Light
+                    )
+                ) { append(movie.plot) }
+            }, modifier = Modifier.padding(6.dp))
+            HorizontalDivider(Modifier.padding(5.dp))
+            Text(
+                text = "Director: ${movie.director}",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = "Actors: ${movie.actors}",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = "Rating: ${movie.imdbRating}",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
